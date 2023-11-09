@@ -20,23 +20,23 @@ for head, a in loaded.items():
             sent = occ['Citation']
             args = {p: occ[p] for p in pattern}
             arg_list.extend(args)
-            occs.append([sent, args])
+            occs.append([sent, occ['WordForms'], args])
         parsed[head].append(occs)
 
 arg_list = sorted(list(set(arg_list)))
 
 # format for spreadsheet
-out = [['verb'] + arg_list + ['example']]
+out = [['lemma', 'form'] + arg_list + ['example']]
 for verb, exs in parsed.items():
     for ex in exs:
         for e in ex:
-            args = []
+            args = [e[1]]
             for a in arg_list:
-                if a in e[1]:
-                    args.append(e[1][a])
+                if a in e[2]:
+                    args.append(e[2][a])
                 else:
                     args.append('')
-            out.append([[verb] + args + [e[0]]])
+            out.append([verb] + args + [e[0]])
 
 # export to csv
 with open('verb-valency-raw.csv', mode='w') as csv_file:
